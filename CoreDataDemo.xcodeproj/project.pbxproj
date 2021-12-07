@@ -14,7 +14,6 @@
 		A8D5AD1D275E7A40003CEABC /* CoreDataDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A8D5AD1B275E7A40003CEABC /* CoreDataDemo.xcdatamodeld */; };
 		A8D5AD1F275E7A41003CEABC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8D5AD1E275E7A41003CEABC /* Assets.xcassets */; };
 		A8D5AD22275E7A41003CEABC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8D5AD20275E7A41003CEABC /* LaunchScreen.storyboard */; };
-		A8D5AD2A275E80F2003CEABC /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D5AD29275E80F2003CEABC /* TaskViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		A8D5AD1E275E7A41003CEABC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8D5AD21275E7A41003CEABC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8D5AD23275E7A41003CEABC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A8D5AD29275E80F2003CEABC /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +43,6 @@
 			isa = PBXGroup;
 			children = (
 				A8D5AD16275E7A40003CEABC /* TaskListViewController.swift */,
-				A8D5AD29275E80F2003CEABC /* TaskViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -169,7 +166,6 @@
 			files = (
 				A8D5AD17275E7A40003CEABC /* TaskListViewController.swift in Sources */,
 				A8D5AD1D275E7A40003CEABC /* CoreDataDemo.xcdatamodeld in Sources */,
-				A8D5AD2A275E80F2003CEABC /* TaskViewController.swift in Sources */,
 				1D348639275EBB6600994DA5 /* StorageManager.swift in Sources */,
 				A8D5AD13275E7A40003CEABC /* AppDelegate.swift in Sources */,
 				A8D5AD15275E7A40003CEABC /* SceneDelegate.swift in Sources */,

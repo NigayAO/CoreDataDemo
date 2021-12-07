@@ -53,6 +53,8 @@ class TaskListViewController: UITableViewController {
             action: #selector(addNewTask)
         )
         
+        navigationItem.leftBarButtonItem = editButtonItem
+        
         navigationController?.navigationBar.tintColor = .white
     }
     
@@ -70,6 +72,25 @@ class TaskListViewController: UITableViewController {
         }
     }
     
+    private func save(_ taskName: String) {
+        let task = Task(context: context.persistentContainer.viewContext)
+        task.title = taskName
+        taskList.append(task)
+        
+        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
+        tableView.insertRows(at: [cellIndex], with: .automatic)
+        
+        context.saveContext()
+    }
+    
+    private func edit(_ taskName: String, _ indexPath: IndexPath) {
+        let task = taskList[indexPath.row]
+        task.title = taskName
+        context.saveContext()
+    }
+    
+    //MARK: - AlertControllers
+
     private func showSaveAlert(with title: String, and message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
@@ -84,7 +105,7 @@ class TaskListViewController: UITableViewController {
         }
         present(alert, animated: true)
     }
-    
+
     private func showEditAlert(with title: String, and message: String, indexPath: IndexPath) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
@@ -101,36 +122,10 @@ class TaskListViewController: UITableViewController {
         }
         present(alert, animated: true)
     }
-    
-    private func save(_ taskName: String) {
-        let task = Task(context: context.persistentContainer.viewContext)
-        task.title = taskName
-        taskList.append(task)
-        
-        let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
-        tableView.insertRows(at: [cellIndex], with: .automatic)
-        
-        if context.persistentContainer.viewContext.hasChanges {
-            do {
-                try context.persistentContainer.viewContext.save()
-            } catch let error {
-                print(error)
-            }
-        }
-    }
-    
-    private func edit(_ taskName: String, _ indexPath: IndexPath) {
-        let task = taskList[indexPath.row]
-        task.title = taskName
-        if context.persistentContainer.viewContext.hasChanges {
-            do {
-                try context.persistentContainer.viewContext.save()
-            } catch let error {
-                print(error)
-            }
-        }
-    }
+
 }
+
+//MARK: - TableViewDelegate and TableViewDataSource
 
 extension TaskListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -148,6 +143,10 @@ extension TaskListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         showEditAlert(with: "Change task", and: "Plans changed", indexPath: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        .delete
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
