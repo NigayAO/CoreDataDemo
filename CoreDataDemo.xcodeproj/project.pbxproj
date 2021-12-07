@@ -89,8 +89,8 @@
 				A8D5AD14275E7A40003CEABC /* SceneDelegate.swift */,
 				1D34863C275EBBC500994DA5 /* Services */,
 				1D34863A275EBBAA00994DA5 /* ViewControllers */,
-				A8D5AD1E275E7A41003CEABC /* Assets.xcassets */,
 				1D34863B275EBBB600994DA5 /* Storyboards */,
+				A8D5AD1E275E7A41003CEABC /* Assets.xcassets */,
 				A8D5AD23275E7A41003CEABC /* Info.plist */,
 				A8D5AD1B275E7A40003CEABC /* CoreDataDemo.xcdatamodeld */,
 			);

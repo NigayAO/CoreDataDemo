@@ -8,7 +8,8 @@
 import UIKit
 
 class TaskListViewController: UITableViewController {
-    private let context = StorageManager.shared.persistentContainer.viewContext
+    
+    private let context = StorageManager.shared
     
     private var taskList: [Task] = []
     private let cellID = "task"
@@ -56,20 +57,20 @@ class TaskListViewController: UITableViewController {
     }
     
     @objc private func addNewTask() {
-        showAlert(with: "New task", and: "What do you want to do?")
+        showSaveAlert(with: "New task", and: "What do you want to do?")
     }
     
     private func fetchData() {
         let fetchRequest = Task.fetchRequest()
         
         do {
-            taskList = try context.fetch(fetchRequest)
+            taskList = try context.persistentContainer.viewContext.fetch(fetchRequest)
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    private func showAlert(with title: String, and message: String) {
+    private func showSaveAlert(with title: String, and message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             guard let task = alert.textFields?.first?.text, !task.isEmpty else { return }
@@ -84,17 +85,46 @@ class TaskListViewController: UITableViewController {
         present(alert, animated: true)
     }
     
+    private func showEditAlert(with title: String, and message: String, indexPath: IndexPath) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+            guard let task = alert.textFields?.first?.text, !task.isEmpty else { return }
+            self.edit(task, indexPath)
+            self.tableView.reloadData()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        alert.addTextField { textField in
+            let task = self.taskList[indexPath.row]
+            textField.text = task.title
+        }
+        present(alert, animated: true)
+    }
+    
     private func save(_ taskName: String) {
-        let task = Task(context: context)
+        let task = Task(context: context.persistentContainer.viewContext)
         task.title = taskName
         taskList.append(task)
         
         let cellIndex = IndexPath(row: taskList.count - 1, section: 0)
         tableView.insertRows(at: [cellIndex], with: .automatic)
         
-        if context.hasChanges {
+        if context.persistentContainer.viewContext.hasChanges {
             do {
-                try context.save()
+                try context.persistentContainer.viewContext.save()
+            } catch let error {
+                print(error)
+            }
+        }
+    }
+    
+    private func edit(_ taskName: String, _ indexPath: IndexPath) {
+        let task = taskList[indexPath.row]
+        task.title = taskName
+        if context.persistentContainer.viewContext.hasChanges {
+            do {
+                try context.persistentContainer.viewContext.save()
             } catch let error {
                 print(error)
             }
@@ -114,5 +144,17 @@ extension TaskListViewController {
         content.text = task.title
         cell.contentConfiguration = content
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        showEditAlert(with: "Change task", and: "Plans changed", indexPath: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        let task = taskList[indexPath.row]
+        taskList.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        context.persistentContainer.viewContext.delete(task)
+        context.saveContext()
     }
 }
